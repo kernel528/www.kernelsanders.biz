@@ -1,0 +1,43 @@
+kind: pipeline
+type: docker
+name: default
+
+trigger:
+  branch:
+    - 'testing'
+    - 'main'
+  event:
+    - push
+    - pull_request
+
+steps:
+  - name: docker-build
+    image: plugins/docker
+    when:
+      branch:
+        - 'testing'
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      repo: kernel528/www.kernelsanders.biz
+      tags:
+        - testing
+        - testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
+  - name: docker-test
+    image: kernel528/www.kernelsanders.biz:testing
+    when:
+      branch:
+        - main
+    commands:
+      - cat /etc/alpine-release
+      - "httpd -v"
+  - name: notify
+    image: plugins/slack
+    settings:
+      webhook: https://hooks.slack.com/services/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
+    when:
+      status:
+        - failure
+        - success
