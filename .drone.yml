@@ -38,7 +38,7 @@ steps:
     commands:
       - "cat /etc/alpine-release"
       - "httpd -v"
-      - "curl localhost"
+      - "curl www.kernelsanders.biz"
 
   # Send slack notification
   - name: slack-notify
