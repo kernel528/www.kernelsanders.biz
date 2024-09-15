@@ -1,0 +1,16 @@
+h1 {
+    font-family: "Playfair Display", Times, serif;
+    text-align: center;
+}
+
+body {
+    background-color: #eae2b7;
+    color: #003049;
+    font-family: "Source Sans Pro", Tahoma, Geneva, Verdana, sans-serif;
+    padding: 40px;
+}
+
+p {
+    font-family: -apple-system;
+    text-align: center;
+}
