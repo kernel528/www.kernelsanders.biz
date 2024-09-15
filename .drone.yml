@@ -1,0 +1,51 @@
+kind: pipeline
+type: docker
+name: default
+
+trigger:
+  branch:
+    - 'testing'
+    - 'main'
+  event:
+    - tag
+    - pull_request
+
+steps:
+  # Build the docker image
+  - name: docker-build
+    image: plugins/docker
+    environment:
+      DRONE_TAG: ${DRONE_TAG} # Get the tag value from Drone environment
+    when:
+      event:
+        - tag
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      repo: kernel528/www.kernelsanders.biz
+      tags:
+        - ${DRONE_TAG}
+        - ${DRONE_TAG}-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
+
+ # When merged to main, test the latest image
+  - name: image-test
+    image: kernel528/www.kernelsanders.biz:latest
+    when:
+      branch:
+        - main
+    commands:
+      - "cat /etc/alpine-release"
+      - "httpd -v"
+      - "curl www.kernelsanders.biz"
+
+  # Send slack notification
+  - name: slack-notify
+    image: plugins/slack
+    settings:
+      webhook: https://hooks.slack.com/services/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
+    when:
+      status:
+        - failure
+        - success
