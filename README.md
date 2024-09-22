@@ -1,3 +1,5 @@
+[![Build Status](http://drone.kernelsanders.biz:8080/api/badges/kernel528/www.kernelsanders.biz/status.svg?ref=refs/heads/main)](http://drone.kernelsanders.biz:8080/kernel528/www.kernelsanders.biz)
+
 # www.kernelsanders.biz
 This repo contains the sourcecode to build the www.kernelsanders.biz website.
 
