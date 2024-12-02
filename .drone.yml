@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: default
+name: www-kernelsanders-biz-build
 
 trigger:
   branch:
@@ -44,7 +44,8 @@ steps:
   - name: slack-notify
     image: plugins/slack
     settings:
-      webhook: https://hooks.slack.com/services/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
+      webhook:
+        from_secret: slack_webhook
     when:
       status:
         - failure
