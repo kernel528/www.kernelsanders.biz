@@ -1,4 +1,5 @@
-[![Build Status](http://drone.kernelsanders.biz:8080/api/badges/kernel528/www.kernelsanders.biz/status.svg?ref=refs/heads/main)](http://drone.kernelsanders.biz:8080/kernel528/www.kernelsanders.biz)
+[![Drone Build Status](http://drone.kernelsanders.biz:8080/api/badges/kernel528/www.kernelsanders.biz/status.svg)](http://drone.kernelsanders.biz:8080/kernel528/www.kernelsanders.biz)
+[![Latest Version](https://img.shields.io/github/v/tag/kernel528/www.kernelsanders.biz)](https://github.com/kernel528/www.kernelsanders.biz/releases/latest)
 
 # www.kernelsanders.biz
 This repo contains the sourcecode to build the www.kernelsanders.biz website.
