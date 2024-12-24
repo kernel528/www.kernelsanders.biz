@@ -1,21 +1,59 @@
 kind: pipeline
 type: docker
-name: default
+name: testing
 
 trigger:
   branch:
     - 'testing'
-    - 'main'
   event:
-    - tag
     - pull_request
 
 steps:
-  # Build the docker image
-  - name: docker-build
+  # Build testing docker image
+  - name: testing-docker-build
     image: plugins/docker
     environment:
       DRONE_TAG: ${DRONE_TAG} # Get the tag value from Drone environment
+    when:
+      event:
+        - pull_request
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      repo: kernel528/www.kernelsanders.biz
+      tags:
+        - testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
+        - testing-latest
+
+  - name: slack-notification
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook
+    when:
+      status:
+        - failure
+        - success
+
+---
+kind: pipeline
+type: docker
+name: main
+
+trigger:
+  - branch:
+      - main
+  - event:
+      - tag
+
+# Build the main docker image
+steps:
+  - name: main-docker-build
+    image: plugins/docker
+    environment:
+      DRONE_TAG: ${DRONE_TAG}
     when:
       event:
         - tag
@@ -27,10 +65,11 @@ steps:
       repo: kernel528/www.kernelsanders.biz
       tags:
         - ${DRONE_TAG}
-        - ${DRONE_TAG}-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
+        - ${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
+        - latest
 
- # When merged to main, test the latest image
-  - name: image-test
+  # When merged to main, test the latest image
+  - name: main-image-test
     image: kernel528/www.kernelsanders.biz:latest
     when:
       branch:
@@ -40,12 +79,13 @@ steps:
       - "httpd -v"
       - "curl www.kernelsanders.biz"
 
-  # Send slack notification
-  - name: slack-notify
+  # Post slack notification
+  - name: slack-notification
     image: plugins/slack
-    settings:
-      webhook: https://hooks.slack.com/services/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
     when:
       status:
         - failure
         - success
+    settings:
+      webhook:
+        from_secret: slack_webhook_drone_alerts
