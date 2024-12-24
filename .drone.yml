@@ -26,16 +26,17 @@ steps:
       tags:
         - testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
         - testing-latest
-
+        
+  # Post slack notification
   - name: slack-notification
     image: plugins/slack
-    settings:
-      webhook:
-        from_secret: slack_webhook
     when:
       status:
         - failure
         - success
+    settings:
+      webhook:
+        from_secret: slack_webhook_drone_alerts
 
 ---
 
