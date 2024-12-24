@@ -6,3 +6,4 @@
 * 1.0.3 - Refactored .drone.yml to use updated plugins.  Added updated slack notifications sectioned.
 * 1.1.0 - Updated index.html and style.css based on ChatGPT feedback.
 * 1.1.1 - Updated index.html with updated version.
+* 1.1.2 - Updated badge links in README.md
