@@ -7,3 +7,4 @@
 * 1.1.0 - Updated index.html and style.css based on ChatGPT feedback.
 * 1.1.1 - Updated index.html with updated version.
 * 1.1.2 - Updated badge links in README.md
+* 1.1.3 - Updated to base image kernel528/alpine:3.21.2
