@@ -17,8 +17,8 @@ This repo contains the sourcecode to build the www.kernelsanders.biz website.
 
 ## How to Build Locally and Push
 - Build the docker image
-    - ```docker image build -t kernel528/www.kernelsanders.biz:0.0.1 --platform linux/amd64 -f Dockerfile .```
+    - ```docker image build -t kernel528/www.kernelsanders.biz:1.1.3 --platform linux/amd64 -f Dockerfile .```
 - Push image to docker registry
-    - ```docker image push kernel528/www.kernelsanders.biz:0.0.1```
+    - ```docker image push kernel528/www.kernelsanders.biz:1.1.3```
 
 ### Author:  kernel528@gmail.com
