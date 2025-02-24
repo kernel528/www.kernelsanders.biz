@@ -1,5 +1,8 @@
-[![Drone Build Status](http://drone.kernelsanders.biz:8080/api/badges/kernel528/www.kernelsanders.biz/status.svg)](http://drone.kernelsanders.biz:8080/kernel528/www.kernelsanders.biz)
+[![Drone Build Status](http://drone.kernelsanders.biz:8080/api/badges/kernel528/www.kernelsanders.biz/status.svg?ref=refs/heads/main)](http://drone.kernelsanders.biz:8080/kernel528/www.kernelsanders.biz)
 [![Latest Version](https://img.shields.io/github/v/tag/kernel528/www.kernelsanders.biz)](https://github.com/kernel528/www.kernelsanders.biz/releases/latest)
+[![Docker Pulls](https://img.shields.io/docker/pulls/kernel528/www.kernelsanders.biz)](https://hub.docker.com/r/kernel528/www.kernelsanders.biz)
+[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/kernel528/www.kernelsanders.biz)](https://hub.docker.com/r/kernel528/www.kernelsanders.biz)
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/kernel528/www.kernelsanders.biz)](https://hub.docker.com/r/kernel528/www.kernelsanders.biz)
 
 # www.kernelsanders.biz
 This repo contains the sourcecode to build the www.kernelsanders.biz website.
