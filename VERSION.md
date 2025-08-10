@@ -10,3 +10,4 @@
 * 1.1.3 - Updated to base image kernel528/alpine:3.21.2
 * 1.1.4 - Updated to use kernel528/httpd:2.4.63, which uses base image kernel528/alpine:3.21.3.
 * 1.1.5 - Updated to use kernel528/httpd:2.4.63-3.22, which uses base image kernel528/alpine:3.22.0.
+* 1.1.6 - Updated to use kernel528/httpd:2.4.64-3.22.1, which uses base image kernel528/alpine:3.22.1
