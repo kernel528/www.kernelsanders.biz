@@ -79,7 +79,7 @@ steps:
     commands:
       - "cat /etc/alpine-release"
       - "httpd -v"
-      - "curl www.kernelsanders.biz"
+      - "curl www.kernelsanders.biz:81"
 
   # Post slack notification
   - name: slack-notification
