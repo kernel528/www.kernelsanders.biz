@@ -1,4 +1,4 @@
-FROM kernel528/httpd:2.4.65-3.22.2
+FROM kernel528/httpd:2.4.66-3.23.2
 LABEL authors="kernel528"
 
 COPY httpd-foreground /usr/local/bin/
