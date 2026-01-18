@@ -22,7 +22,7 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    background: radial-gradient(circle at top left, #eff6ff, #f8fafc 45%, #ecfeff 100%);
+    background: linear-gradient(135deg, #b7c4d6 0%, #cfd9e4 45%, #c3cfde 100%);
     color: var(--ink);
     font-family: "Space Grotesk", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     position: relative;
@@ -36,13 +36,13 @@ body::after {
     z-index: -1;
     border-radius: 999px;
     filter: blur(0);
-    opacity: 0.35;
+    opacity: 0;
 }
 
 body::before {
     width: 420px;
     height: 420px;
-    background: radial-gradient(circle, #67e8f9, transparent 70%);
+    background: radial-gradient(circle, #94a3b8, transparent 70%);
     top: -120px;
     right: -140px;
 }
@@ -50,7 +50,7 @@ body::before {
 body::after {
     width: 520px;
     height: 520px;
-    background: radial-gradient(circle, #a5b4fc, transparent 70%);
+    background: radial-gradient(circle, #94a3b8, transparent 70%);
     bottom: -220px;
     left: -180px;
 }
