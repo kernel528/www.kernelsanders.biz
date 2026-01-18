@@ -51,9 +51,9 @@ steps:
         path: /var/run/docker.sock
     commands:
       - apk add --no-cache curl
-      - docker run --rm -d -p 8080:80 --name site-test kernel528/www.kernelsanders.biz:testing-latest
+      - docker run --rm -d -p 8081:80 --name site-test kernel528/www.kernelsanders.biz:testing-latest
       - sleep 2
-      - curl -f http://localhost:8080/
+      - curl -f http://localhost:8081/
       - docker stop site-test
 
   # Post slack notification
