@@ -51,8 +51,14 @@ steps:
         path: /var/run/docker.sock
     commands:
       - docker run --rm -d -p 8082:80 --name site-test kernel528/www.kernelsanders.biz:testing-latest
-      - sleep 2
-      - docker run --rm --network container:site-test curlimages/curl:8.7.1 -f http://localhost/
+      - |
+        for _ in $(seq 1 15); do
+          if docker run --rm --network container:site-test curlimages/curl:8.7.1 -f http://localhost/; then
+            exit 0
+          fi
+          sleep 1
+        done
+        exit 1
       - docker stop site-test
   - name: smoke-test-cleanup
     image: docker:24-cli
