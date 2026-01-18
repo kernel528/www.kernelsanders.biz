@@ -110,11 +110,6 @@ h1 {
     overflow-x: auto;
 }
 
-.hero-actions .btn {
-    padding: 10px 16px;
-    font-size: 0.9rem;
-}
-
 .btn {
     display: inline-flex;
     align-items: center;
@@ -125,6 +120,11 @@ h1 {
     font-weight: 600;
     white-space: nowrap;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero-actions .btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
 }
 
 .btn.primary {
