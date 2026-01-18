@@ -8,7 +8,24 @@ trigger:
   branch:
     - testing
 
+volumes:
+  - name: docker_sock
+    host:
+      path: /var/run/docker.sock
+
 steps:
+  - name: lint-html-css
+    image: node:20-alpine
+    commands:
+      - npm install -g htmlhint stylelint stylelint-config-standard
+      - htmlhint "htdocs/**/*.html"
+      - stylelint "htdocs/**/*.css"
+
+  - name: link-check
+    image: lycheeorg/lychee:0.15.1
+    commands:
+      - lychee --no-progress --timeout 20s --max-retries 2 --accept 200,206,301,302,429 --exclude "http://drone.kernelsanders.biz:8080" htdocs/index.html
+
   # Build testing docker image
   - name: testing-docker-build
     image: plugins/docker
@@ -26,7 +43,19 @@ steps:
       tags:
         - testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
         - testing-latest
-        
+
+  - name: smoke-test
+    image: docker:24-cli
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - apk add --no-cache curl
+      - docker run --rm -d -p 8080:80 --name site-test kernel528/www.kernelsanders.biz:testing-latest
+      - sleep 2
+      - curl -f http://localhost:8080/
+      - docker stop site-test
+
   # Post slack notification
   - name: slack-notification
     image: plugins/slack
