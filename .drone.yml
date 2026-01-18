@@ -55,6 +55,17 @@ steps:
       - sleep 2
       - curl -f http://localhost:8082/
       - docker stop site-test
+  - name: smoke-test-cleanup
+    image: docker:24-cli
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      status:
+        - failure
+        - success
+    commands:
+      - docker rm -f site-test || true
 
   # Post slack notification
   - name: slack-notification
