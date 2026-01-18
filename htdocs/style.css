@@ -151,6 +151,28 @@ h1 {
     color: var(--ink);
 }
 
+.version-chip {
+    text-decoration: none;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.version-chip:hover,
+.version-chip:focus-visible {
+    box-shadow: 0 8px 18px rgb(15 23 42 / 18%);
+    transform: translateY(-1px);
+}
+
+.version-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.version-link:hover,
+.version-link:focus-visible {
+    color: var(--accent);
+}
+
 .hero-art {
     display: flex;
     align-items: center;
