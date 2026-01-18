@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "lint": "npm run lint:html && npm run lint:css",
+    "lint:html": "htmlhint \"htdocs/**/*.html\"",
+    "lint:css": "stylelint \"htdocs/**/*.css\""
+  },
+  "devDependencies": {
+    "htmlhint": "^1.2.0",
+    "stylelint": "^17.0.0",
+    "stylelint-config-standard": "^40.0.0"
+  }
+}
