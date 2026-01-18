@@ -9,13 +9,183 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
     />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;600;700&display=swap"
+    />
     <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="wrapper">
     <!-- Main Content -->
-    <main>
-        <h1>Welcome to the www.kernelsanders.biz Homepage!</h1>
+    <main class="page">
+        <section class="hero">
+            <div class="hero-content">
+                <p class="eyebrow">KernelSanders</p>
+                <h1>Linux-forward links, releases, and quick checks.</h1>
+                <p class="lead">
+                    A clean tech landing page for the everyday tools behind the site.
+                    Scroll the favorites, then add your own link stack next.
+                </p>
+                <div class="hero-actions">
+                    <a class="btn primary" href="http://drone.kernelsanders.biz:8080">Open Drone</a>
+                    <a class="btn ghost" href="https://kernel528-starter-node-express-postgresql.onrender.com/">
+                        Starter Stack
+                    </a>
+                </div>
+                <div class="status-row">
+                    <span class="chip">Version 1.2.0</span>
+                    <span class="chip">httpd v2.4.66</span>
+                    <span class="chip">alpine v3.23.2</span>
+                </div>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+                <svg viewBox="0 0 420 320" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <lineargradient id="screenGlow" x1="0" x2="1" y1="0" y2="1">
+                            <stop offset="0" stop-color="#68d7d0"/>
+                            <stop offset="1" stop-color="#1c6dd0"/>
+                        </lineargradient>
+                    </defs>
+                    <rect x="36" y="30" width="320" height="210" rx="16" fill="#0f172a"/>
+                    <rect x="54" y="52" width="284" height="166" rx="12" fill="url(#screenGlow)"/>
+                    <rect x="92" y="86" width="150" height="12" rx="6" fill="#0f172a" opacity="0.6"/>
+                    <rect x="92" y="110" width="190" height="12" rx="6" fill="#0f172a" opacity="0.5"/>
+                    <rect x="92" y="134" width="110" height="12" rx="6" fill="#0f172a" opacity="0.4"/>
+                    <circle cx="300" cy="120" r="34" fill="#0f172a" opacity="0.35"/>
+                    <circle cx="300" cy="120" r="18" fill="#0f172a" opacity="0.45"/>
+                    <rect x="140" y="248" width="170" height="12" rx="6" fill="#1f2937"/>
+                </svg>
+            </div>
+        </section>
+
+        <section class="scroll-section">
+            <div class="section-header">
+                <h2>Linux favorites</h2>
+                <p>Swipe or scroll sideways for curated starting points.</p>
+            </div>
+            <div class="card-track" role="list">
+                <a class="link-card" href="https://kernel.org" target="_blank" rel="noopener noreferrer">
+                    <div class="card-top">
+                        <div class="logo">
+                            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="6" y="8" width="36" height="26" rx="6" fill="#0f172a"/>
+                                <rect x="10" y="12" width="28" height="18" rx="4" fill="#63e6be"/>
+                                <rect x="18" y="34" width="12" height="6" rx="3" fill="#0f172a"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="card-title">Kernel.org</span>
+                            <span class="card-url">kernel.org</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Official home for Linux kernel releases and docs.</p>
+                    <div class="card-tags">
+                        <span>Release</span>
+                        <span>Docs</span>
+                    </div>
+                </a>
+                <a class="link-card" href="https://linuxmint.com" target="_blank" rel="noopener noreferrer">
+                    <div class="card-top">
+                        <div class="logo">
+                            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="24" cy="24" r="18" fill="#134e4a"/>
+                                <path d="M18 30V18h4v8h4v-6h4v10H18z" fill="#5eead4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="card-title">Linux Mint</span>
+                            <span class="card-url">linuxmint.com</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Popular desktop distro with a smooth out-of-box flow.</p>
+                    <div class="card-tags">
+                        <span>Desktop</span>
+                        <span>Community</span>
+                    </div>
+                </a>
+                <a class="link-card" href="https://www.redhat.com" target="_blank" rel="noopener noreferrer">
+                    <div class="card-top">
+                        <div class="logo">
+                            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 30c2-6 10-14 20-12 6 2 8 8 4 12-6 6-20 6-24 0z" fill="#ef4444"/>
+                                <rect x="18" y="12" width="16" height="6" rx="3" fill="#111827"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="card-title">Red Hat</span>
+                            <span class="card-url">redhat.com</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Enterprise Linux, tooling, and hybrid infrastructure.</p>
+                    <div class="card-tags">
+                        <span>Enterprise</span>
+                        <span>Platform</span>
+                    </div>
+                </a>
+                <a class="link-card" href="https://fedoraproject.org" target="_blank" rel="noopener noreferrer">
+                    <div class="card-top">
+                        <div class="logo">
+                            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="24" cy="24" r="18" fill="#1d4ed8"/>
+                                <path d="M18 30h8c4 0 6-2 6-6s-2-6-6-6h-2v4h2c2 0 3 1 3 2s-1 2-3 2h-8v8z" fill="#e0f2fe"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="card-title">Fedora</span>
+                            <span class="card-url">fedoraproject.org</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Fast-moving distro with fresh packages and features.</p>
+                    <div class="card-tags">
+                        <span>Workstation</span>
+                        <span>Server</span>
+                    </div>
+                </a>
+                <a class="link-card" href="https://ubuntu.com" target="_blank" rel="noopener noreferrer">
+                    <div class="card-top">
+                        <div class="logo">
+                            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="24" cy="24" r="18" fill="#f97316"/>
+                                <circle cx="24" cy="11" r="4" fill="#fff7ed"/>
+                                <circle cx="36" cy="30" r="4" fill="#fff7ed"/>
+                                <circle cx="12" cy="30" r="4" fill="#fff7ed"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="card-title">Ubuntu</span>
+                            <span class="card-url">ubuntu.com</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Canonical's ecosystem for desktop, cloud, and IoT.</p>
+                    <div class="card-tags">
+                        <span>LTS</span>
+                        <span>Cloud</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="stack-section">
+            <div class="section-header">
+                <h2>More tech links</h2>
+                <p>Reserve this section for your next favorites list.</p>
+            </div>
+            <div class="stack-grid">
+                <div class="stack-card">
+                    <h3>Personal picks</h3>
+                    <p>Drop in your favorite docs, tools, and dashboards.</p>
+                </div>
+                <div class="stack-card">
+                    <h3>Learning queue</h3>
+                    <p>Track the next kernel reads or distro deep dives.</p>
+                </div>
+                <div class="stack-card">
+                    <h3>Inspiration</h3>
+                    <p>Keep a shortlist of projects worth exploring.</p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -24,7 +194,7 @@
             <a href="http://drone.kernelsanders.biz:8080">Drone</a> |
             <a href="https://kernel528-starter-node-express-postgresql.onrender.com/">Starter: Node, Express, Postgres</a>
         </nav>
-        <p>Version 1.1.9</p>
+        <p>Version 2.0.0</p>
         <p>Running: httpd v2.4.66, alpine linux v3.23.2</p>
     </footer>
 </div>
