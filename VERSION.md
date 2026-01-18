@@ -16,3 +16,4 @@
 * 1.1.9 - Updated to use kernel528/httpd:2.4.66, with updated based image kernel528/alpine:3.23.2.
 * 1.2.0 - Added linting, link checks, and smoke tests in Drone CI.
 * 2.0.0 - Redesign of site using codex, updating with horizontal scrolling for linux sites and nicer design layout.
+* 2.0.2 - Added cache-busting for style.css and bumped site version.
