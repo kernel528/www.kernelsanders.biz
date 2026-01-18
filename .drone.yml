@@ -53,7 +53,7 @@ steps:
       - apk add --no-cache curl
       - docker run --rm -d -p 8082:80 --name site-test kernel528/www.kernelsanders.biz:testing-latest
       - sleep 2
-      - curl -f http://localhost:8081/
+      - curl -f http://localhost:8082/
       - docker stop site-test
 
   # Post slack notification
