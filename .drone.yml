@@ -50,10 +50,9 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
     commands:
-      - apk add --no-cache curl
       - docker run --rm -d -p 8082:80 --name site-test kernel528/www.kernelsanders.biz:testing-latest
       - sleep 2
-      - curl -f http://localhost:8082/
+      - docker run --rm --network container:site-test curlimages/curl:8.7.1 -f http://localhost/
       - docker stop site-test
   - name: smoke-test-cleanup
     image: docker:24-cli
