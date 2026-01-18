@@ -19,3 +19,4 @@
 * 2.0.2 - Added cache-busting for style.css and bumped site version.
 * 2.0.3 - Bumped site version for cache-busted assets.
 * 2.0.4 - Updated hero and footer link order and tightened button layout.
+* 2.0.5 - Darkened background gradient and removed glow accents.
