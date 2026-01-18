@@ -22,7 +22,7 @@ steps:
       - stylelint "htdocs/**/*.css"
 
   - name: link-check
-    image: lycheeorg/lychee:0.15.1
+    image: ghcr.io/lycheeverse/lychee:0.15.1
     commands:
       - lychee --no-progress --timeout 20s --max-retries 2 --accept 200,206,301,302,429 --exclude "http://drone.kernelsanders.biz:8080" htdocs/index.html
 
