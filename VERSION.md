@@ -18,3 +18,4 @@
 * 2.0.0 - Redesign of site using codex, updating with horizontal scrolling for linux sites and nicer design layout.
 * 2.0.2 - Added cache-busting for style.css and bumped site version.
 * 2.0.3 - Bumped site version for cache-busted assets.
+* 2.0.4 - Updated hero and footer link order and tightened button layout.
