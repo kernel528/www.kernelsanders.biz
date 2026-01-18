@@ -24,7 +24,7 @@ steps:
   - name: link-check
     image: docker.io/lycheeverse/lychee:0.15.1
     commands:
-      - lychee --no-progress --timeout 20s --max-retries 2 --accept 200,206,301,302,429 --exclude "http://drone.kernelsanders.biz:8080" htdocs/index.html
+      - lychee --no-progress --timeout 20 --max-retries 2 --accept 200,206,301,302,429 --exclude "http://drone.kernelsanders.biz:8080" htdocs/index.html
 
   # Build testing docker image
   - name: testing-docker-build
