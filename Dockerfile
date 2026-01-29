@@ -1,4 +1,4 @@
-FROM kernel528/httpd:2.4.66-3.23.2
+FROM kernel528/httpd:2.4.66-3.23.3
 LABEL authors="kernel528"
 
 COPY VERSION.md /tmp/VERSION.md
