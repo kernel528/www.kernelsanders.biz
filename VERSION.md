@@ -20,3 +20,4 @@
 * 2.0.3 - Bumped site version for cache-busted assets.
 * 2.0.4 - Updated hero and footer link order and tightened button layout.
 * 2.0.5 - Darkened background gradient and removed glow accents.
+* 2.0.6 - Updated base image to kernel528/httpd:2.4.66-3.23.3 and refreshed documentation.
