@@ -45,7 +45,7 @@ steps:
         - testing-latest
 
   - name: smoke-test
-    image: docker:24-cli
+    image: docker:27-cli
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -61,7 +61,7 @@ steps:
         exit 1
       - docker stop site-test
   - name: smoke-test-cleanup
-    image: docker:24-cli
+    image: docker:27-cli
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
