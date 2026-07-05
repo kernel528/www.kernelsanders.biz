@@ -1,0 +1,63 @@
+# Repository Context
+
+This repository hosts the static website for `www.kernelsanders.biz` and builds it into a Docker image published as `kernel528/www.kernelsanders.biz`.
+
+Current audited checkout: local `testing` branch synced from GitHub after PRs 48, 50, 51, and 52. The `2.1.0` release is tagged and deployed.
+
+## Site Structure
+
+- `htdocs/index.html` contains the page content, links, inline SVG artwork, status chips, Linux favorites cards, placeholder tech-link cards, and footer.
+- `htdocs/style.css` contains all visual styling, responsive behavior, horizontal card scrolling, animation, and reduced-motion handling.
+- `screenshots/local.png` and `screenshots/live.png` store reference screenshots for local/live visual checks.
+- `VERSION.md` is the release/version history source of truth; the current latest entry is `2.1.0`.
+- `scripts/inject-version.sh` reads the latest version from `VERSION.md` and injects it into `htdocs/index.html` during Docker builds.
+- `httpd-foreground` removes stale Apache PID files and starts `httpd -DFOREGROUND`.
+
+## Docker Model
+
+- `Dockerfile` builds from `kernel528/httpd:2.4.68-3.24.1`.
+- The build copies `VERSION.md` to `/tmp/VERSION.md`.
+- The build copies `scripts/inject-version.sh` to `/usr/local/bin/inject-version.sh` and makes it executable.
+- The build copies `httpd-foreground` into `/usr/local/bin/` and uses it as the container command.
+- The build copies `htdocs/` into `/usr/local/apache2/htdocs/`.
+- The build runs `inject-version.sh` to sync the visible site version, GitHub release links, and `style.css?v=` cache-busting query string from `VERSION.md`.
+- The image exposes port `80`.
+
+## Home Docker Workspace
+
+This site depends on Docker images and deployment artifacts maintained under a home Docker workspace.
+
+- The workspace README describes the image catalog and update order.
+- Base-image chain: `kernel528/alpine` -> `kernel528/httpd` -> `kernel528/www.kernelsanders.biz`.
+- The matching HTTPD image repo is the local `httpd-docker` project.
+- Current site base image aligns with that HTTPD repo: `kernel528/httpd:2.4.68-3.24.1`.
+- Swarm deployment is in the local stack file for `kernelsanders`.
+- Current stack image is `kernel528/www.kernelsanders.biz:2.1.0`.
+- Current stack port mapping is host `81` to container `80`.
+- The same stack also deploys `kernel528/kernelsanders-docusaurus:3.10.1` on host port `3001`.
+
+## CI And Release Flow
+
+- `.drone.yml` has a `testing` pipeline for pull requests targeting `testing`.
+- The `testing` pipeline runs HTML/CSS linting with `htmlhint` and `stylelint` in `node:20-alpine`.
+- The link-check step is present but commented out.
+- The `testing` pipeline builds Docker tags `testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}` and `testing-latest`.
+- The `testing` pipeline smoke-tests `kernel528/www.kernelsanders.biz:testing-latest` on host port `8082` and logs the version under test from `VERSION.md`.
+- The `main` pipeline publishes `${DRONE_TAG}`, `${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}`, and `latest` tags.
+- The `main` pipeline includes `main-image-test`, which reports Alpine and httpd versions and curls `www.kernelsanders.biz:81`.
+
+## Current Site Version State
+
+- `VERSION.md` latest entry: `2.1.0`.
+- `htdocs/index.html` source still contains `style.css?v=2.0.6`, `Site Version 2.0.6`, and release tag `2.0.6`; these are rewritten to `2.1.0` during the Docker build.
+- `htdocs/index.html` displays runtime text `httpd v2.4.68, alpine linux v3.24.1`.
+- Docker base image is `kernel528/httpd:2.4.68-3.24.1`.
+
+## Change Rules
+
+- Keep site content in `htdocs/index.html` and visual changes in `htdocs/style.css`.
+- Use 4-space indentation in HTML and CSS.
+- When bumping the site version, update `VERSION.md`; the Docker build injects the current version into `htdocs/index.html`.
+- When changing the base HTTPD image, update `Dockerfile`, `README.md`, visible runtime text in `htdocs/index.html` if needed, and `VERSION.md` together.
+- If releasing a new site image, update the stack image tag to the new `kernel528/www.kernelsanders.biz:<version>` tag.
+- Keep `node_modules/`, logs, `.DS_Store`, and IDE files untracked.
