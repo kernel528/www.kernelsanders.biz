@@ -50,6 +50,8 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
     commands:
+      - |
+        echo "Smoke testing version $(awk '/^\* /{version=$2} END{print version}' VERSION.md) with kernel528/www.kernelsanders.biz:testing-latest"
       - docker run --rm -d -p 8082:80 --name site-test kernel528/www.kernelsanders.biz:testing-latest
       - |
         for _ in $(seq 1 15); do
@@ -70,6 +72,8 @@ steps:
         - failure
         - success
     commands:
+      - |
+        echo "Cleaning up smoke test container for version $(awk '/^\* /{version=$2} END{print version}' VERSION.md)"
       - docker rm -f site-test || true
 
   # Post slack notification
@@ -122,6 +126,8 @@ steps:
       branch:
         - main
     commands:
+      - |
+        echo "Testing release version $(awk '/^\* /{version=$2} END{print version}' /tmp/VERSION.md) from kernel528/www.kernelsanders.biz:latest"
       - "cat /etc/alpine-release"
       - "httpd -v"
       - "curl www.kernelsanders.biz:81"
