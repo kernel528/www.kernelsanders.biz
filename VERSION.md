@@ -22,3 +22,4 @@
 * 2.0.5 - Darkened background gradient and removed glow accents.
 * 2.0.6 - Updated base image to kernel528/httpd:2.4.66-3.23.3 and refreshed documentation.
 * 2.1.0 - Updated base image to kernel528/httpd:2.4.68-3.24.1.
+* 2.1.1 - Release created after Drone smoke-test version logging and YAML fixes.
