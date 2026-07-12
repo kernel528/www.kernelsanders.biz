@@ -3,7 +3,7 @@
 ## Agent Instructions
 - Read `README.md` first.
 - Read `docs/current-work.md` if present.
-- Read the relevant project profile from `~/Projects/Engineering/projects/<name>/`.
+- Read the relevant project profile from `~/Projects/Agentic_Engineering/projects/www-kernelsanders-biz/`.
 - Keep changes focused.
 - Do not make broad refactors without asking.
 - Run the smallest relevant test/build first.
