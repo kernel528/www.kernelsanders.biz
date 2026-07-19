@@ -51,17 +51,17 @@ steps:
         path: /var/run/docker.sock
     commands:
       - |
-        echo "Smoke testing version $(awk '/^\* /{version=$2} END{print version}' VERSION.md) with kernel528/www.kernelsanders.biz:testing-latest"
-      - docker run --rm -d -p 8082:80 --name site-test kernel528/www.kernelsanders.biz:testing-latest
+        echo "Smoke testing version $(awk '/^\* /{version=$2} END{print version}' VERSION.md) with kernel528/www.kernelsanders.biz:testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}"
+      - docker run --rm -d --name site-test-${DRONE_BUILD_NUMBER} kernel528/www.kernelsanders.biz:testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
       - |
         for _ in $(seq 1 15); do
-          if docker run --rm --network container:site-test curlimages/curl:8.7.1 -f http://localhost/; then
+          if docker run --rm --network container:site-test-${DRONE_BUILD_NUMBER} curlimages/curl:8.7.1 -f http://localhost/; then
             exit 0
           fi
           sleep 1
         done
         exit 1
-      - docker stop site-test
+      - docker stop site-test-${DRONE_BUILD_NUMBER}
   - name: smoke-test-cleanup
     image: docker:27-cli
     volumes:
@@ -74,7 +74,7 @@ steps:
     commands:
       - |
         echo "Cleaning up smoke test container for version $(awk '/^\* /{version=$2} END{print version}' VERSION.md)"
-      - docker rm -f site-test || true
+      - docker rm -f site-test-${DRONE_BUILD_NUMBER} || true
 
   # Post slack notification
   - name: slack-notification
