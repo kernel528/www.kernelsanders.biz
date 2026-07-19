@@ -8,7 +8,7 @@
 This repo contains the source code for the www.kernelsanders.biz static website and its Docker image.
 
 ## Setup
-* This uses the `kernel528/httpd:2.4.68-3.24.1` image as the base Docker image.
+* This uses the `kernel528/httpd:2.4.68-3.24.1_1` image as the base Docker image.
 * Site content is located in `./htdocs`.
 * The Dockerfile copies `htdocs/` into the Apache web root and injects the site version during build.
 * Drone builds and smoke-tests temporary images for pull requests targeting `testing`.
@@ -18,14 +18,17 @@ This repo contains the source code for the www.kernelsanders.biz static website 
 
 This website repository is an independent downstream of [`httpd-docker`](https://github.com/kernel528/httpd-docker). It is coordinated by [`docker-workspace`](https://github.com/kernel528/docker-workspace), publishes `kernel528/www.kernelsanders.biz`, and is deployed by [`docker-swarm`](https://github.com/kernel528/docker-swarm) through `stacks/kernelsanders-stack.yml`.
 
-When a new immutable `kernel528/httpd` tag is published and validated:
+The repository policy branch is `testing`. When a new immutable `kernel528/httpd` tag is published and validated:
 
-1. Create a separate website refresh branch.
+1. Sync `testing` and create a focused working branch from it.
 2. Update the `FROM kernel528/httpd:<tag>` line in `Dockerfile`.
-3. Update `VERSION.md` and any release-tag references.
+3. Update `VERSION.md`, documentation, dependency locks, and CI configuration as needed.
 4. Run lint, build the image, and smoke-test the rendered homepage.
-5. Merge and publish an immutable website release tag.
-6. Only then update `kernelsanders-stack.yml`, deploy the website stack, and verify the site.
+5. Open a PR into `testing`; require the testing lint/build/smoke pipeline to pass before merge.
+6. After `testing` is validated, open a PR from `testing` to `main`.
+7. Create the immutable release tag from merged `main` and confirm the exact Docker image tag resolves.
+8. Update `kernelsanders-stack.yml` in the independent `docker-swarm` repository.
+9. Redeploy the stack from the Portainer UI, then verify the service, logs, and website.
 
 Do not combine the HTTPD image release, website release, and Swarm manifest update into one repository or commit.
 
@@ -49,6 +52,7 @@ Do not combine the HTTPD image release, website release, and Swarm manifest upda
 ## CI Behavior
 * `testing` pipeline runs on pull requests to the `testing` branch and runs linting, builds testing images, and smoke tests.
 * `main` pipeline runs on tags from the `main` branch and builds the release images.
+* Dependabot version updates target `testing`. GitHub security updates may still target the default branch; retarget them to `testing` before merging.
 
 ## How to Build Locally and Push
 * Build the Docker image:
@@ -57,8 +61,12 @@ Do not combine the HTTPD image release, website release, and Swarm manifest upda
     * `docker image push kernel528/www.kernelsanders.biz:<version>`
 
 ## Release Checklist
+* Start from current `testing` and merge the validated working branch into `testing` first.
 * Update the base image in `Dockerfile` if needed.
 * Bump the version and notes in `VERSION.md`.
-* Ensure the footer version in `htdocs/index.html` matches `VERSION.md` (injected at build time).
+* Run `npm ci`, `npm audit`, `npm run lint`, the Docker build, and a homepage smoke test.
+* Merge `testing` into `main`, then create the release tag from `main`.
+* Confirm the release image resolves before changing the Swarm stack.
+* Update and merge `kernelsanders-stack.yml`, then redeploy from Portainer and validate the site.
 
 ### Author:  kernel528@gmail.com
