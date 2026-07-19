@@ -11,8 +11,23 @@ This repo contains the source code for the www.kernelsanders.biz static website 
 * This uses the `kernel528/httpd:2.4.68-3.24.1` image as the base Docker image.
 * Site content is located in `./htdocs`.
 * The Dockerfile copies `htdocs/` into the Apache web root and injects the site version during build.
-* Drone builds the image when a PR is merged to `main` and a tag release is created.
-* On merges to `main`, Drone reports OS and httpd versions and curls the homepage.
+* Drone builds and smoke-tests temporary images for pull requests targeting `testing`.
+* A Git tag created from `main` builds the release image and publishes the exact tag plus `latest`.
+
+## Repository Relationships and Refresh Policy
+
+This website repository is an independent downstream of [`httpd-docker`](https://github.com/kernel528/httpd-docker). It is coordinated by [`docker-workspace`](https://github.com/kernel528/docker-workspace), publishes `kernel528/www.kernelsanders.biz`, and is deployed by [`docker-swarm`](https://github.com/kernel528/docker-swarm) through `stacks/kernelsanders-stack.yml`.
+
+When a new immutable `kernel528/httpd` tag is published and validated:
+
+1. Create a separate website refresh branch.
+2. Update the `FROM kernel528/httpd:<tag>` line in `Dockerfile`.
+3. Update `VERSION.md` and any release-tag references.
+4. Run lint, build the image, and smoke-test the rendered homepage.
+5. Merge and publish an immutable website release tag.
+6. Only then update `kernelsanders-stack.yml`, deploy the website stack, and verify the site.
+
+Do not combine the HTTPD image release, website release, and Swarm manifest update into one repository or commit.
 
 ## Project Layout
 * `htdocs/` - Static site assets (`index.html`, `style.css`).
@@ -23,7 +38,6 @@ This repo contains the source code for the www.kernelsanders.biz static website 
 * `package.json` - Lint and dev server scripts.
 
 ## To Do
-* Wire up Slack notifications in Drone.
 * Refresh homepage content and link stacks.
 * Capture updated screenshots for `screenshots/`.
 
