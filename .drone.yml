@@ -8,6 +8,11 @@ trigger:
   branch:
     - testing
 
+volumes:
+  - name: docker_sock
+    host:
+      path: /var/run/docker.sock
+
 steps:
   - name: lint-html-css
     image: node:20-alpine
@@ -37,7 +42,39 @@ steps:
       repo: kernel528/www.kernelsanders.biz
       tags:
         - testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
-      dry_run: true
+        - testing-latest
+
+  - name: smoke-test
+    image: docker:27-cli
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - |
+        echo "Smoke testing version $(awk '/^\* /{version=$2} END{print version}' VERSION.md) with kernel528/www.kernelsanders.biz:testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}"
+      - docker run --rm -d --name site-test-${DRONE_BUILD_NUMBER} kernel528/www.kernelsanders.biz:testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
+      - |
+        for _ in $(seq 1 15); do
+          if docker run --rm --network container:site-test-${DRONE_BUILD_NUMBER} curlimages/curl:8.7.1 -f http://localhost/; then
+            exit 0
+          fi
+          sleep 1
+        done
+        exit 1
+      - docker stop site-test-${DRONE_BUILD_NUMBER}
+  - name: smoke-test-cleanup
+    image: docker:27-cli
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      status:
+        - failure
+        - success
+    commands:
+      - |
+        echo "Cleaning up smoke test container for version $(awk '/^\* /{version=$2} END{print version}' VERSION.md)"
+      - docker rm -f site-test-${DRONE_BUILD_NUMBER} || true
 
   # Post slack notification
   - name: slack-notification
@@ -59,6 +96,8 @@ name: main
 trigger:
   event:
     - tag
+  branch:
+    - main
 
 # Build the main docker image
 steps:
@@ -79,6 +118,19 @@ steps:
         - ${DRONE_TAG}
         - ${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
         - latest
+
+  # When merged to main, test the latest image
+  - name: main-image-test
+    image: kernel528/www.kernelsanders.biz:latest
+    when:
+      branch:
+        - main
+    commands:
+      - |
+        echo "Testing release version $(awk '/^\* /{version=$2} END{print version}' /tmp/VERSION.md) from kernel528/www.kernelsanders.biz:latest"
+      - "cat /etc/alpine-release"
+      - "httpd -v"
+      - "curl www.kernelsanders.biz:81"
 
   # Post slack notification
   - name: slack-notification
