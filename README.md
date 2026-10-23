@@ -8,7 +8,7 @@
 This repo contains the source code for the www.kernelsanders.biz static website and its Docker image.
 
 ## Setup
-* This uses the `kernel528/httpd:2.4.68-3.24.1_1` image as the base Docker image.
+* This uses the `kernel528/httpd:2.4.69-3.24.1_3` image as the base Docker image.
 * Site content is located in `./htdocs`.
 * The Dockerfile copies `htdocs/` into the Apache web root and injects the site version during build.
 * Drone builds and smoke-tests temporary images for pull requests targeting `testing`.
