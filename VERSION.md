@@ -26,3 +26,4 @@
 * 2.2.0 - Updated to kernel528/httpd:2.4.68-3.24.1_1, refreshed npm security dependencies, and isolated Drone smoke tests.
 * 2.2.1 - Applied several dependabot security patches and local tweaks.
 * 2.2.2 - Applied several bump follow-redirects from 1.16.0 to 1.16.1. Other minor patches.
+* 2.2.3 - Updated base image to 3.24.3_1 and httpd to v2.4.69.
