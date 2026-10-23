@@ -130,7 +130,7 @@ steps:
         echo "Testing release version $(awk '/^\* /{version=$2} END{print version}' /tmp/VERSION.md) from kernel528/www.kernelsanders.biz:latest"
       - "cat /etc/alpine-release"
       - "httpd -v"
-      - "curl www.kernelsanders.biz:81"
+      - "curl www.kernelsanders.biz"
 
   # Post slack notification
   - name: slack-notification
