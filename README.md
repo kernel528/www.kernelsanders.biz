@@ -1,4 +1,4 @@
-[![Drone Build Status](http://drone.kernelsanders.biz:8080/api/badges/kernel528/www.kernelsanders.biz/status.svg?ref=refs/heads/main)](http://drone.kernelsanders.biz:8080/kernel528/www.kernelsanders.biz)
+[![Build Status](https://drone.kernelsanders.biz:8443/api/badges/kernel528/www.kernelsanders.biz/status.svg?ref=refs/heads/main)](https://drone.kernelsanders.biz:8443/kernel528/www.kernelsanders.biz)
 [![Latest Version](https://img.shields.io/github/v/tag/kernel528/www.kernelsanders.biz)](https://github.com/kernel528/www.kernelsanders.biz/releases/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/kernel528/www.kernelsanders.biz)](https://hub.docker.com/r/kernel528/www.kernelsanders.biz)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/kernel528/www.kernelsanders.biz)](https://hub.docker.com/r/kernel528/www.kernelsanders.biz)
@@ -8,7 +8,7 @@
 This repo contains the source code for the www.kernelsanders.biz static website and its Docker image.
 
 ## Setup
-* This uses the `kernel528/httpd:2.4.68-3.24.1_1` image as the base Docker image.
+* This uses the `kernel528/httpd:2.4.69-3.24.3_1` image as the base Docker image.
 * Site content is located in `./htdocs`.
 * The Dockerfile copies `htdocs/` into the Apache web root and injects the site version during build.
 * Drone builds and smoke-tests temporary images for pull requests targeting `testing`.
