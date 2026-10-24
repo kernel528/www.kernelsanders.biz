@@ -24,3 +24,4 @@
 * 2.1.0 - Updated base image to kernel528/httpd:2.4.68-3.24.1.
 * 2.1.1 - Release created after Drone smoke-test version logging and YAML fixes.
 * 2.2.0 - Updated to kernel528/httpd:2.4.68-3.24.1_1, refreshed npm security dependencies, and isolated Drone smoke tests.
+* 2.3.0 - Updated HTTPD/Alpine base image for the current CA trust store and security fixes; upgraded CI Node.js and npm security dependencies.
