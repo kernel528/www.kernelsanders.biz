@@ -1,82 +1,125 @@
 kind: pipeline
 type: docker
-name: testing
+name: website-rootless-validation
+
+node:
+  ci-role: rootless-image-smoke
+  platform: linux-amd64
 
 trigger:
-  event:
-    - pull_request
+  repo:
+    - kernel528/www.kernelsanders.biz
   branch:
     - testing
-
-volumes:
-  - name: docker_sock
-    host:
-      path: /var/run/docker.sock
+    - main
+  event:
+    - pull_request
+    - push
+    - custom
 
 steps:
-  - name: lint-html-css
+  - name: lint-site
     image: node:22.23.4-alpine3.24
     commands:
-      - npm install -g htmlhint stylelint stylelint-config-standard
-      - htmlhint "htdocs/**/*.html"
-      - stylelint "htdocs/**/*.css"
+      - npm ci
+      - npm run lint
 
-#  - name: link-check
-#    image: docker.io/lycheeverse/lychee:0.15.1
-#    commands:
-#      - lychee --no-progress --timeout 20 --max-retries 2 --accept 200,206,301,302,429 --exclude "http://drone.kernelsanders.biz:8080" htdocs/index.html
-
-  # Build testing docker image
-  - name: testing-docker-build
-    image: plugins/docker
+  - name: build-and-smoke
+    image: docker:27-cli
     environment:
-      DRONE_TAG: ${DRONE_TAG} # Get the tag value from Drone environment
-    when:
-      event:
-        - pull_request
-    settings:
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-      repo: kernel528/www.kernelsanders.biz
-      tags:
-        - testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
-        - testing-latest
-
-  - name: smoke-test
-    image: docker:27-cli
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
+      DOCKER_HOST: unix:///var/run/docker.sock
+      DOCKER_BUILDKIT: "0"
     commands:
-      - |
-        echo "Smoke testing version $(awk '/^\* /{version=$2} END{print version}' VERSION.md) with kernel528/www.kernelsanders.biz:testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}"
-      - docker run --rm -d --name site-test-${DRONE_BUILD_NUMBER} kernel528/www.kernelsanders.biz:testing-${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
-      - |
-        for _ in $(seq 1 15); do
-          if docker run --rm --network container:site-test-${DRONE_BUILD_NUMBER} curlimages/curl:8.7.1 -f http://localhost/; then
-            exit 0
-          fi
-          sleep 1
-        done
-        exit 1
-      - docker stop site-test-${DRONE_BUILD_NUMBER}
-  - name: smoke-test-cleanup
-    image: docker:27-cli
+      - scripts/ci-rootless-website-smoke.sh
     volumes:
-      - name: docker_sock
+      - name: podman-socket
         path: /var/run/docker.sock
+
+volumes:
+  - name: podman-socket
+    host:
+      path: /run/user/1001/podman/podman.sock
+
+---
+
+kind: pipeline
+type: docker
+name: website-testing-candidate
+
+trigger:
+  repo:
+    - kernel528/www.kernelsanders.biz
+  branch:
+    - testing
+  event:
+    - push
+
+services:
+  - name: docker
+    image: docker:27.5.1-dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - name: candidate-dockersock
+        path: /var/run
+
+steps:
+  - name: build-and-smoke-candidate
+    image: docker:27.5.1-cli
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      WEBSITE_IMAGE_REPO: kernel528/www.kernelsanders.biz
+    volumes:
+      - name: candidate-dockersock
+        path: /var/run
+    commands:
+      - scripts/ci-build-website-candidate.sh
+
+  - name: publish-candidate
+    image: docker:27.5.1-cli
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      WEBSITE_IMAGE_REPO: kernel528/www.kernelsanders.biz
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_password
+    volumes:
+      - name: candidate-dockersock
+        path: /var/run
+    commands:
+      - scripts/ci-publish-website-candidate.sh
+
+  - name: slack-notification
+    image: plugins/slack
     when:
       status:
         - failure
         - success
-    commands:
-      - |
-        echo "Cleaning up smoke test container for version $(awk '/^\* /{version=$2} END{print version}' VERSION.md)"
-      - docker rm -f site-test-${DRONE_BUILD_NUMBER} || true
+    settings:
+      webhook:
+        from_secret: slack_webhook_drone_alerts
 
-  # Post slack notification
+volumes:
+  - name: candidate-dockersock
+    temp: {}
+
+---
+
+kind: pipeline
+type: docker
+name: main-website
+
+trigger:
+  repo:
+    - kernel528/www.kernelsanders.biz
+  branch:
+    - main
+  event:
+    - push
+
+steps:
   - name: slack-notification
     image: plugins/slack
     when:
@@ -91,48 +134,63 @@ steps:
 
 kind: pipeline
 type: docker
-name: main
+name: website-immutable-release
 
+# Release tags are manually created from reviewed main commits.
 trigger:
+  repo:
+    - kernel528/www.kernelsanders.biz
   event:
     - tag
-  branch:
-    - main
 
-# Build the main docker image
-steps:
-  - name: main-docker-build
-    image: plugins/docker
+services:
+  - name: docker
+    image: docker:27.5.1-dind
+    privileged: true
     environment:
-      DRONE_TAG: ${DRONE_TAG}
-    when:
-      event:
-        - tag
-    settings:
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-      repo: kernel528/www.kernelsanders.biz
-      tags:
-        - ${DRONE_TAG}
-        - ${DRONE_COMMIT:0:8}-drone-build-${DRONE_BUILD_NUMBER}
-        - latest
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - name: release-dockersock
+        path: /var/run
 
-  # When merged to main, test the latest image
-  - name: main-image-test
-    image: kernel528/www.kernelsanders.biz:latest
-    when:
-      branch:
-        - main
+steps:
+  - name: build-and-smoke-release
+    image: docker:27.5.1-cli
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      WEBSITE_IMAGE_REPO: kernel528/www.kernelsanders.biz
+    volumes:
+      - name: release-dockersock
+        path: /var/run
     commands:
-      - |
-        echo "Testing release version $(awk '/^\* /{version=$2} END{print version}' /tmp/VERSION.md) from kernel528/www.kernelsanders.biz:latest"
-      - "cat /etc/alpine-release"
-      - "httpd -v"
-      - "curl www.kernelsanders.biz"
+      - scripts/ci-build-website-release.sh
 
-  # Post slack notification
+  - name: check-immutable-tag-unused
+    image: docker:27.5.1-cli
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      WEBSITE_IMAGE_REPO: kernel528/www.kernelsanders.biz
+    volumes:
+      - name: release-dockersock
+        path: /var/run
+    commands:
+      - scripts/ci-check-website-release-tag-unused.sh
+
+  - name: publish-immutable-release
+    image: docker:27.5.1-cli
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      WEBSITE_IMAGE_REPO: kernel528/www.kernelsanders.biz
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_password
+    volumes:
+      - name: release-dockersock
+        path: /var/run
+    commands:
+      - scripts/ci-publish-website-release.sh
+
   - name: slack-notification
     image: plugins/slack
     when:
@@ -142,3 +200,7 @@ steps:
     settings:
       webhook:
         from_secret: slack_webhook_drone_alerts
+
+volumes:
+  - name: release-dockersock
+    temp: {}
