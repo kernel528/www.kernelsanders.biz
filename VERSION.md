@@ -29,3 +29,4 @@
 * 2.2.3 - Updated base image to 3.24.3_1 and httpd to v2.4.69.
 * 2.2.4 - Fixed issue with incorrect site version info.
 * 2.3.0 - Updated HTTPD/Alpine base image for the current CA trust store and security fixes; upgraded CI Node.js and npm security dependencies.
+* 2.3.1 - Updated base image to kernel528/httpd:2.4.69-3.24.3_3 after the Alpine 3.24.3_3 release.

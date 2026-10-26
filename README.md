@@ -8,11 +8,12 @@
 This repo contains the source code for the www.kernelsanders.biz static website and its Docker image.
 
 ## Setup
-* This uses the `kernel528/httpd:2.4.69-3.24.3_1` image as the base Docker image.
+* This uses the `kernel528/httpd:2.4.69-3.24.3_3` image as the base Docker image.
 * Site content is located in `./htdocs`.
 * The Dockerfile copies `htdocs/` into the Apache web root and injects the site version during build.
-* Drone builds and smoke-tests temporary images for pull requests targeting `testing`.
-* A Git tag created from `main` builds the release image and publishes the exact tag plus `latest`.
+* Pull requests targeting `testing` run HTML/CSS lint and rootless exact-image site smoke checks without registry credentials or publication.
+* Pushes to `testing` publish a unique non-deployable candidate through a separate credentialed step.
+* A Git tag created from reviewed `main` builds and smoke-tests the immutable site release, then publishes the exact tag plus `latest`.
 
 ## Repository Relationships and Refresh Policy
 
@@ -50,9 +51,12 @@ Do not combine the HTTPD image release, website release, and Swarm manifest upda
 * Run a dev server (port 8081): `npm run dev`
 
 ## CI Behavior
-* `testing` pipeline runs on pull requests to the `testing` branch and runs linting, builds testing images, and smoke tests.
-* `main` pipeline runs on tags from the `main` branch and builds the release images.
+* Pull requests to `testing` and promotion PRs to `main` run lint and rootless site-image smoke checks without registry credentials.
+* Pushes to `testing` build and publish only a unique, non-deployable candidate tag.
+* The `main` push validates the source image; a manually created tag from reviewed `main` builds the immutable release and updates `latest`.
 * Dependabot version updates target `testing`. GitHub security updates may still target the default branch; retarget them to `testing` before merging.
+
+For rootless PR builds, add `kernel528/www.kernelsanders.biz` to the isolated runner's exact repository allowlist after reviewing `.drone.yml`. This public repository's PR job receives no registry or release credentials.
 
 ## How to Build Locally and Push
 * Build the Docker image:
