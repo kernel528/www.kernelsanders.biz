@@ -8,7 +8,7 @@
 This repo contains the source code for the www.kernelsanders.biz static website and its Docker image.
 
 ## Setup
-* This uses the `kernel528/httpd:2.4.69-3.24.3_3` image as the base Docker image.
+* This uses the `kernel528/httpd:2.4.69-3.24.4_1` image as the base Docker image.
 * Site content is located in `./htdocs`.
 * The Dockerfile copies `htdocs/` into the Apache web root and injects the site version during build.
 * Pull requests targeting `testing` run HTML/CSS lint and rootless exact-image site smoke checks without registry credentials or publication.
@@ -46,6 +46,7 @@ Do not combine the HTTPD image release, website release, and Swarm manifest upda
 * Capture updated screenshots for `screenshots/`.
 
 ## Local Development
+* Use Node.js `^22.22.2`, `^24.15.0`, or `>=26.0.0` for Stylelint 18 and standard config 41. CI uses `node:22.23.4-alpine3.24`.
 * Install dependencies: `npm install`
 * Lint HTML/CSS: `npm run lint`
 * Run a dev server (port 8081): `npm run dev`
